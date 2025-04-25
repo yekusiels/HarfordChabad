@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Harford Haven//Grand Opening//EN
+BEGIN:VEVENT
+UID:20250629T200000Z-HarfordHavenOpeningApple@harfordhaven.org
+DTSTAMP:20250425T120000Z
+DTSTART:20250629T200000Z
+DTEND:20250629T220000Z
+SUMMARY:Harford Haven Grand Opening & Ribbon Cutting
+DESCRIPTION:Join us for the Grand Opening of Harford Haven!\n\nParking available at Kleins ShopRite across the street.\n\nMore details at HarfordHaven.org/Ground-Breaking
+LOCATION:38 East Broadway, Bel Air, MD
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR
