@@ -59,6 +59,68 @@ function pickSamples_(pool, count, seedString) {
   return indices.slice(0, count).map(function (i) { return pool[i]; });
 }
 
+function parseDateUTC_(dateStr) {
+  var p = dateStr.split('-');
+  return Date.UTC(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+}
+
+var DAY_MS = 24 * 60 * 60 * 1000;
+
+var LEVELS = [
+  { minDays: 90, title: 'Steward', emoji: '🕊️' },
+  { minDays: 30, title: 'Steady', emoji: '🔥' },
+  { minDays: 7, title: 'Rooted', emoji: '🌳' },
+  { minDays: 0, title: 'Seedling', emoji: '🌱' }
+];
+
+function levelFor_(totalDays) {
+  for (var i = 0; i < LEVELS.length; i++) {
+    if (totalDays >= LEVELS[i].minDays) return { title: LEVELS[i].title, emoji: LEVELS[i].emoji };
+  }
+  return { title: 'Seedling', emoji: '🌱' };
+}
+
+/**
+ * Current streak (consecutive days up to today or, if today isn't
+ * answered yet, up to yesterday), longest streak ever, and total
+ * distinct days answered.
+ */
+function computeStats_(sheet) {
+  var lastRow = sheet.getLastRow();
+  var dateSet = {};
+  if (lastRow >= 2) {
+    var values = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
+    values.forEach(function (r) {
+      if (r[0]) dateSet[r[0]] = true;
+    });
+  }
+  var dates = Object.keys(dateSet).sort();
+  var totalDays = dates.length;
+
+  var longest = 0, current = 0, prevTime = null;
+  dates.forEach(function (d) {
+    var t = parseDateUTC_(d);
+    current = (prevTime !== null && t - prevTime === DAY_MS) ? current + 1 : 1;
+    longest = Math.max(longest, current);
+    prevTime = t;
+  });
+
+  var today = todayString_();
+  var cursor = dateSet[today] ? parseDateUTC_(today) : parseDateUTC_(today) - DAY_MS;
+  var streak = 0;
+  while (dateSet[Utilities.formatDate(new Date(cursor), 'UTC', 'yyyy-MM-dd')]) {
+    streak++;
+    cursor -= DAY_MS;
+  }
+
+  return {
+    streak: streak,
+    longestStreak: Math.max(longest, streak),
+    totalDays: totalDays,
+    level: levelFor_(totalDays)
+  };
+}
+
 function findRowForDate_(sheet, date) {
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return null;
@@ -112,7 +174,8 @@ function getTodayData() {
     date: date,
     questions: questions,
     hasExisting: !!existing,
-    sheetUrl: SpreadsheetApp.getActiveSpreadsheet().getUrl()
+    sheetUrl: SpreadsheetApp.getActiveSpreadsheet().getUrl(),
+    stats: computeStats_(sheet)
   };
 }
 
@@ -143,5 +206,5 @@ function submitResponses(payload) {
   } else {
     sheet.appendRow(row);
   }
-  return { ok: true, date: date };
+  return { ok: true, date: date, stats: computeStats_(sheet) };
 }

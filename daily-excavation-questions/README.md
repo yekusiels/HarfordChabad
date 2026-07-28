@@ -1,10 +1,13 @@
 # Daily Seven Excavation Questions
 
 A small personal web app that asks the seven excavation questions every
-day, offers example beliefs (drawn from the appendix PDF) for
-inspiration that you can rate 1-10 for how much they resonate, and
-saves everything — date, your answer to each question, the samples
-shown, and your ratings — as one row in a Google Sheet.
+day, one at a time like a quick quiz. Under each question you can tap
+an example belief (drawn from the appendix PDF) to instantly use it as
+your answer — no typing required — and rate 1-10 how much it
+resonates. A streak counter, a level badge, and a progress tracker
+make it feel like a habit game instead of a chore. Everything — date,
+your answer to each question, the samples shown, and your ratings —
+saves as one row in a Google Sheet.
 
 It's built as a Google Apps Script "container-bound" script, so there's
 no server to host or pay for: Google runs it, and it writes directly
@@ -48,19 +51,32 @@ into a spreadsheet you own.
 
 ## Daily use
 
-Open the web app URL. It shows the seven questions with a text box for
-each. Expand "Need a spark? See example beliefs" under any question to
-see four example beliefs (rotates automatically each day) and rate how
-much each one resonates, 1-10 — purely to help you find your own
-words. Click **Save today's answers**.
+Open the web app URL. It walks you through the seven questions one at
+a time, like a quick quiz:
+
+- **Tap to answer.** Under each question, four example beliefs
+  (rotating automatically each day) are shown as tappable cards — tap
+  one and it instantly becomes your answer in the text box above, no
+  typing required. You can still edit it, or write your own from
+  scratch. Rate any example 1-10 for how much it resonates.
+- **Progress dots** across the top show all 7 questions at a glance —
+  filled and checked once answered, so you can jump to any question or
+  just watch the dots fill in as you go.
+- **Streak, level, and days-practiced** are shown at the top: your
+  current daily streak, a level badge that levels up the more
+  consistently you show up (🌱 Seedling → 🌳 Rooted at 7 days → 🔥
+  Steady at 30 → 🕊️ Steward at 90), and your total days practiced.
+- Hit **Finish** on the seventh question for a small celebration
+  (confetti + updated streak). A **Save now** button in the header
+  saves your progress at any point, even mid-way through.
 
 Your entry lands in a **Responses** tab in the spreadsheet with these
 columns: `Timestamp`, `Date`, and for each question `Qn Response`,
 `Qn Samples Shown`, `Qn Sample Ratings`.
 
 If you open the app again later the same day, it preloads what you
-already wrote — saving again updates that day's row instead of adding
-a duplicate.
+already wrote and shows which questions are already answered — saving
+again updates that day's row instead of adding a duplicate.
 
 ## Source of the questions
 
