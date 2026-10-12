@@ -126,7 +126,6 @@ FORMULAS = [
     ("Touch_Overdue__c", f"""
     <fields>
         <fullName>Touch_Overdue__c</fullName>
-        <defaultValue>false</defaultValue>
         <description>True when the donor is past the touch cadence for their tier (Top 12: 7 days, Rising 25: 15, Dream 50: 30, Lapsed Lead: 90).</description>
         <externalId>false</externalId>
         <formula>{OVERDUE}</formula>
