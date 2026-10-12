@@ -11,6 +11,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 $work = Join-Path $PWD "inner-circle-layouts"
 
 $section = @"
@@ -82,6 +84,8 @@ sf project retrieve start @metadataArgs --target-metadata-dir $work --unzip --ta
 $pkg = Get-ChildItem $work -Recurse -Filter package.xml | Select-Object -First 1
 if (-not $pkg) { throw "Retrieve failed: no package.xml under $work" }
 $root = $pkg.DirectoryName
+Write-Host "Retrieved files in ${root}:"
+Get-ChildItem $root -Recurse -File | ForEach-Object { Write-Host "  $($_.FullName.Substring($root.Length))" }
 
 $utf8 = New-Object System.Text.UTF8Encoding $false
 $changed = 0
@@ -102,7 +106,12 @@ foreach ($file in Get-ChildItem $root -Recurse -Filter *.layout) {
 }
 if ($changed -eq 0) { Write-Host "Nothing to deploy."; exit 0 }
 
-$deployArgs = @("project", "deploy", "start", "--metadata-dir", $root, "--single-package", "--target-org", $Org)
+# Deploy a zip with package.xml at its root (the CLI does not find it in a plain folder here).
+$zip = Join-Path $work "layouts-deploy.zip"
+if (Test-Path $zip) { Remove-Item $zip -Force }
+[IO.Compression.ZipFile]::CreateFromDirectory($root, $zip)
+
+$deployArgs = @("project", "deploy", "start", "--metadata-dir", $zip, "--single-package", "--target-org", $Org)
 if (-not $Deploy) { $deployArgs += "--dry-run"; Write-Host "Dry run (nothing will be saved)..." }
 else { Write-Host "Deploying..." }
 sf @deployArgs | Out-Host
