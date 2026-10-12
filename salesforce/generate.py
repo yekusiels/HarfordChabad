@@ -98,14 +98,15 @@ IF( npo02__LastCloseDate__c &lt; TODAY() - 548, &quot;Lapsed&quot;,
 
 OVERDUE = """AND(
   NOT(ISBLANK(TEXT(Inner_Circle_Tier__c))),
+  NOT(ISPICKVAL(Inner_Circle_Tier__c, &quot;Steady Support&quot;)),
   OR(
-    AND(ISBLANK(LastActivityDate), NOT(ISPICKVAL(Inner_Circle_Tier__c, &quot;Steady Support&quot;))),
-    CASE( TEXT(Inner_Circle_Tier__c),
-      &quot;Top 12&quot;,      TODAY() - LastActivityDate &gt; 7,
-      &quot;Rising 25&quot;,   TODAY() - LastActivityDate &gt; 15,
-      &quot;Dream 50&quot;,    TODAY() - LastActivityDate &gt; 30,
-      &quot;Lapsed Lead&quot;, TODAY() - LastActivityDate &gt; 90,
-      FALSE )
+    ISBLANK(LastActivityDate),
+    TODAY() - LastActivityDate &gt; CASE( TEXT(Inner_Circle_Tier__c),
+      &quot;Top 12&quot;, 7,
+      &quot;Rising 25&quot;, 15,
+      &quot;Dream 50&quot;, 30,
+      &quot;Lapsed Lead&quot;, 90,
+      9999 )
   )
 )"""
 
