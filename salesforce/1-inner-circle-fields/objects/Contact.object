@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Inner_Circle_Tier__c</fullName>
+        <description>Donor portfolio tier, assigned manually after reviewing Suggested Tier.</description>
+        <externalId>false</externalId>
+        <label>Inner Circle Tier</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Top 12</fullName>
+                    <default>false</default>
+                    <label>Top 12</label>
+                </value>
+                <value>
+                    <fullName>Rising 25</fullName>
+                    <default>false</default>
+                    <label>Rising 25</label>
+                </value>
+                <value>
+                    <fullName>Dream 50</fullName>
+                    <default>false</default>
+                    <label>Dream 50</label>
+                </value>
+                <value>
+                    <fullName>Steady Support</fullName>
+                    <default>false</default>
+                    <label>Steady Support</label>
+                </value>
+                <value>
+                    <fullName>Lapsed Lead</fullName>
+                    <default>false</default>
+                    <label>Lapsed Lead</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Estimated_Net_Worth__c</fullName>
+        <description>From wealth screening or prospect research.</description>
+        <externalId>false</externalId>
+        <label>Estimated Net Worth</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Largest_Known_Outside_Gift__c</fullName>
+        <description>Largest known gift this person made to another organization.</description>
+        <externalId>false</externalId>
+        <label>Largest Known Outside Gift</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Mission_Alignment__c</fullName>
+        <description>How strongly the donor connects with the mission.</description>
+        <externalId>false</externalId>
+        <label>Mission Alignment</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Strong</fullName>
+                    <default>false</default>
+                    <label>Strong</label>
+                </value>
+                <value>
+                    <fullName>Moderate</fullName>
+                    <default>false</default>
+                    <label>Moderate</label>
+                </value>
+                <value>
+                    <fullName>Unknown</fullName>
+                    <default>false</default>
+                    <label>Unknown</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Relationship_Depth__c</fullName>
+        <description>How well the Rabbi knows the donor personally.</description>
+        <externalId>false</externalId>
+        <label>Relationship Depth</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Personal</fullName>
+                    <default>false</default>
+                    <label>Personal</label>
+                </value>
+                <value>
+                    <fullName>Acquainted</fullName>
+                    <default>false</default>
+                    <label>Acquainted</label>
+                </value>
+                <value>
+                    <fullName>None</fullName>
+                    <default>false</default>
+                    <label>None</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Alignment_Notes__c</fullName>
+        <description>Values, story and connection to the mission.</description>
+        <externalId>false</externalId>
+        <label>Alignment Notes</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Next_Step__c</fullName>
+        <description>The next concrete action with this donor.</description>
+        <externalId>false</externalId>
+        <label>Next Step</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Next_Step_Date__c</fullName>
+        <description>When the next step is due.</description>
+        <externalId>false</externalId>
+        <label>Next Step Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+</CustomObject>

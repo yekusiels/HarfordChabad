@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Contact.Inner_Circle_Tier__c</members>
+        <members>Contact.Estimated_Net_Worth__c</members>
+        <members>Contact.Largest_Known_Outside_Gift__c</members>
+        <members>Contact.Mission_Alignment__c</members>
+        <members>Contact.Relationship_Depth__c</members>
+        <members>Contact.Alignment_Notes__c</members>
+        <members>Contact.Next_Step__c</members>
+        <members>Contact.Next_Step_Date__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Inner_Circle_Fundraising</members>
+        <name>PermissionSet</name>
+    </types>
+    <version>60.0</version>
+</Package>
