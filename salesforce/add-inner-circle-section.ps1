@@ -12,6 +12,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $work = Join-Path $PWD "inner-circle-layouts"
 
@@ -88,7 +89,7 @@ Write-Host "Retrieved files in ${root}:"
 Get-ChildItem $root -Recurse -File | ForEach-Object { Write-Host "  $($_.FullName.Substring($root.Length))" }
 
 $utf8 = New-Object System.Text.UTF8Encoding $false
-$changed = 0
+$changed = @()
 foreach ($file in Get-ChildItem $root -Recurse -Filter *.layout) {
     $xml = [IO.File]::ReadAllText($file.FullName)
     if ($xml -match "Inner_Circle_Tier__c") {
@@ -102,14 +103,38 @@ foreach ($file in Get-ChildItem $root -Recurse -Filter *.layout) {
     $xml = $xml.Insert($i, "`n" + $section.TrimEnd())
     [IO.File]::WriteAllText($file.FullName, $xml, $utf8)
     Write-Host "  added section: $($file.Name)"
-    $changed++
+    $changed += $file.BaseName
 }
-if ($changed -eq 0) { Write-Host "Nothing to deploy."; exit 0 }
+if ($changed.Count -eq 0) { Write-Host "Nothing to deploy."; exit 0 }
 
-# Deploy a zip with package.xml at its root (the CLI does not find it in a plain folder here).
+# Deploy only the layouts we changed. Build the zip entry by entry so paths
+# use forward slashes (Windows PowerShell's zip helpers write backslashes,
+# which Salesforce does not recognize).
+$members = ($changed | ForEach-Object { "        <members>$([Security.SecurityElement]::Escape($_))</members>" }) -join "`n"
+$apiVersion = ([xml][IO.File]::ReadAllText($pkg.FullName)).Package.version
+$packageXml = @"
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+$members
+        <name>Layout</name>
+    </types>
+    <version>$apiVersion</version>
+</Package>
+"@
+
 $zip = Join-Path $work "layouts-deploy.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
-[IO.Compression.ZipFile]::CreateFromDirectory($root, $zip)
+$archive = [IO.Compression.ZipFile]::Open($zip, [IO.Compression.ZipArchiveMode]::Create)
+try {
+    $entry = $archive.CreateEntry("package.xml")
+    $w = New-Object IO.StreamWriter($entry.Open(), $utf8)
+    $w.Write($packageXml); $w.Close()
+    foreach ($name in $changed) {
+        $src = Join-Path $root "layouts\$name.layout"
+        [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $src, "layouts/$name.layout") | Out-Null
+    }
+} finally { $archive.Dispose() }
 
 $deployArgs = @("project", "deploy", "start", "--metadata-dir", $zip, "--single-package", "--target-org", $Org)
 if (-not $Deploy) { $deployArgs += "--dry-run"; Write-Host "Dry run (nothing will be saved)..." }
